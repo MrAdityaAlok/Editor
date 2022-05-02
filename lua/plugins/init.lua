@@ -54,11 +54,19 @@ local plugins = {
   },
 
   ["NvChad/nvim-colorizer.lua"] = function()
-    local ft = { "css", "javascript", "vim", "html", "lua", "jproperties", "properties" }
+    local ft = {
+      "css",
+      "javascript",
+      "vim",
+      "html",
+      "lua",
+      "jproperties",
+      "properties",
+    }
     return {
       event = "BufRead",
       ft = ft,
-      config = require "plugins.configs.others".colorizer(ft)
+      config = require("plugins.configs.others").colorizer(ft),
     }
   end,
 
@@ -75,7 +83,9 @@ local plugins = {
   ["p00f/nvim-ts-rainbow"] = { after = "nvim-ts-context-commentstring" },
   ["SmiteshP/nvim-gps"] = {
     after = "nvim-ts-rainbow",
-    config = function() require('nvim-gps').setup() end
+    config = function()
+      require("nvim-gps").setup()
+    end,
   },
 
   -- git stuff
@@ -94,7 +104,7 @@ local plugins = {
     module = "lspconfig",
     before = "nvim-lspconfig",
     setup = function()
-      require("core.utils").packer_lazy_load("schemastore.nvim")
+      require("core.utils").packer_lazy_load "schemastore.nvim"
     end,
   },
   ["neovim/nvim-lspconfig"] = {
@@ -131,7 +141,9 @@ local plugins = {
     setup = function()
       require("core.mappings").comment()
     end,
-    config = function() require('Comment').setup() end
+    config = function()
+      require("Comment").setup()
+    end,
   },
 
   ["andymass/vim-matchup"] = {
@@ -203,7 +215,7 @@ local plugins = {
     opt = true,
     setup = function()
       vim.g.cursorhold_updatetime = 100
-      require("utils").packer_lazy_load("FixCursorHold.nvim")
+      require("utils").packer_lazy_load "FixCursorHold.nvim"
     end,
   },
   ["goolord/alpha-nvim"] = {
@@ -214,7 +226,9 @@ local plugins = {
   },
   ["folke/which-key.nvim"] = {
     event = "BufEnter",
-    config = function() require("which-key").setup() end,
+    config = function()
+      require("which-key").setup()
+    end,
   },
 
   -- file managing , picker etc
@@ -236,12 +250,12 @@ local plugins = {
   ["karb94/neoscroll.nvim"] = {
     event = "WinScrolled",
     config = function()
-      require('neoscroll').setup({
+      require("neoscroll").setup {
         hide_cursor = false,
         respect_scrolloff = true,
         easing_function = "sine",
-      })
-    end
+      }
+    end,
   },
 
   -- ["nvim-telescope/telescope.nvim"] = {

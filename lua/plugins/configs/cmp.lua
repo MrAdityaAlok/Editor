@@ -8,7 +8,7 @@ vim.opt.completeopt = "menuone,noselect"
 
 cmp.setup {
   view = {
-    entries = { name = 'custom', selection_order = 'near_cursor' }
+    entries = { name = "custom", selection_order = "near_cursor" },
   },
   window = {
     completion = cmp.config.window.bordered(),
@@ -22,11 +22,7 @@ cmp.setup {
   formatting = {
     format = function(entry, vim_item)
       local icons = require "custom.configs.lspkind_icons"
-      vim_item.kind = string.format(
-        "%s %s",
-        icons[vim_item.kind],
-        vim_item.kind
-      )
+      vim_item.kind = string.format("%s %s", icons[vim_item.kind], vim_item.kind)
       -- set a name for each source
       vim_item.menu = ({
         nvim_lsp = "[LSP]",
@@ -40,11 +36,11 @@ cmp.setup {
       return vim_item
     end,
   },
-  mapping = cmp.mapping.preset.insert({
-    ["<CR>"] = cmp.mapping.confirm({
+  mapping = cmp.mapping.preset.insert {
+    ["<CR>"] = cmp.mapping.confirm {
       select = true,
       behavior = cmp.ConfirmBehavior.Replace,
-    }),
+    },
     ["<C-j>"] = cmp.mapping.scroll_docs(-4),
     ["<C-l>"] = cmp.mapping.scroll_docs(4),
     ["<C-Space>"] = cmp.mapping.complete(),
@@ -60,8 +56,7 @@ cmp.setup {
       else
         fallback()
       end
-    end, { "i", "s", }
-    ),
+    end, { "i", "s" }),
     ["<S-Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_prev_item()
@@ -70,31 +65,28 @@ cmp.setup {
       else
         fallback()
       end
-    end, { "i", "s", }
-    ),
-  }),
+    end, { "i", "s" }),
+  },
   sources = {
     { name = "nvim_lsp" },
     { name = "luasnip" },
     { name = "nvim_lua" },
     { name = "path" },
     { name = "buffer" },
-
-
   },
 }
 
 cmp.setup.filetype({ "gitcommit", "gitrebase" }, {
   sources = cmp.config.sources({
-    { name = 'git' },
+    { name = "git" },
   }, {
-    { name = 'buffer' },
-  })
+    { name = "buffer" },
+  }),
 })
 
-cmp.setup.cmdline('/', {
+cmp.setup.cmdline("/", {
   mapping = cmp.mapping.preset.cmdline(),
   sources = {
-    { name = 'buffer' }
-  }
+    { name = "buffer" },
+  },
 })

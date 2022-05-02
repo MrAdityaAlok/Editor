@@ -12,30 +12,10 @@ map("v", "p", "p:let @+=@0<CR>")
 -- empty mode is same as using <cmd> :map
 -- also don't use g[j|k] when in operator pending mode, so it doesn't alter d, y or c behaviour
 
-map(
-  { "n", "x", "o" },
-  "j",
-  'v:count || mode(1)[0:1] == "no" ? "j" : "gj"',
-  { expr = true }
-)
-map(
-  { "n", "x", "o" },
-  "k",
-  'v:count || mode(1)[0:1] == "no" ? "k" : "gk"',
-  { expr = true }
-)
-map(
-  "",
-  "<Down>",
-  'v:count || mode(1)[0:1] == "no" ? "j" : "gj"',
-  { expr = true }
-)
-map(
-  "",
-  "<Up>",
-  'v:count || mode(1)[0:1] == "no" ? "k" : "gk"',
-  { expr = true }
-)
+map({ "n", "x", "o" }, "j", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true })
+map({ "n", "x", "o" }, "k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
+map("", "<Down>", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true })
+map("", "<Up>", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
 
 -- use ESC to turn off search highlighting
 map("n", "<Esc>", "<cmd> :noh <CR>")
@@ -112,16 +92,8 @@ M.bufferline = function()
 end
 
 M.comment = function()
-  map(
-    "n",
-    "<leader>/",
-    "<cmd> :lua require('Comment.api').toggle_current_linewise()<CR>"
-  )
-  map(
-    "v",
-    "<leader>/",
-    "<esc><cmd> :lua require('Comment.api').toggle_linewise_op(vim.fn.visualmode())<CR>"
-  )
+  map("n", "<leader>/", "<cmd> :lua require('Comment.api').toggle_current_linewise()<CR>")
+  map("v", "<leader>/", "<esc><cmd> :lua require('Comment.api').toggle_linewise_op(vim.fn.visualmode())<CR>")
 end
 
 M.lspconfig = function()
@@ -203,11 +175,7 @@ end
 M.telescope = function()
   map("n", "<leader>fb", "<cmd> :Telescope buffers <CR>")
   map("n", "<leader>ff", "<cmd> :Telescope find_files <CR>")
-  map(
-    "n",
-    "<leader>fa",
-    "<cmd> :Telescope find_files follow=true no_ignore=true hidden=true <CR>"
-  )
+  map("n", "<leader>fa", "<cmd> :Telescope find_files follow=true no_ignore=true hidden=true <CR>")
   map("n", "<leader>cm", "<cmd> :Telescope git_commits <CR>")
   map("n", "<leader>gt", "<cmd> :Telescope git_status <CR>")
   map("n", "<leader>fh", "<cmd> :Telescope help_tags <CR>")

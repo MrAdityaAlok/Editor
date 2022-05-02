@@ -72,7 +72,7 @@ function M.autocmd(group, cmds)
       cmd(string.format("%s %s", _cmd["clear"] and "autocmd!" or "autocmd", _cmd[1]))
     end
   end
-  cmd("augroup END")
+  cmd "augroup END"
 end
 
 return M

@@ -152,8 +152,8 @@ local lsp_progress = {
       local msg = Lsp.message or ""
       local percentage = Lsp.percentage or 0
       local title = Lsp.title or ""
-      local spinners = { "", "", "", }
-      local success_icon = { "", "", "", }
+      local spinners = { "", "", "" }
+      local success_icon = { "", "", "" }
 
       local ms = vim.loop.hrtime() / 1000000
       local frame = math.floor(ms / 120) % #spinners
@@ -271,7 +271,7 @@ add_table(left, {
       return gps.get_location
     end
     return ""
-  end
+  end,
 })
 
 add_table(middle, lsp_progress)

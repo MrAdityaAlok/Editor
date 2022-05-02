@@ -10,7 +10,6 @@ if not found then
   vim.notify("Warning: failed to load custom.configs.filetype", vim.log.levels.WARN)
 end
 
-
 opt.confirm = true
 opt.laststatus = 3 -- global statusline
 opt.title = true
@@ -84,6 +83,6 @@ for _, plugin in pairs(default_plugins) do
 end
 
 vim.schedule(function()
-  vim.opt.shadafile = vim.fn.stdpath("cache") .. "/nvim_shada"
+  vim.opt.shadafile = vim.fn.stdpath "cache" .. "/nvim_shada"
   vim.cmd [[ silent! rsh ]]
 end)

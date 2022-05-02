@@ -19,12 +19,12 @@ M.better_escape = function()
   if not present then
     return
   end
-  escape.setup({
+  escape.setup {
     mapping = { "jk" }, -- a table with mappings to use
     timeout = vim.o.timeoutlen,
     clear_empty_lines = false, -- clear line after escaping if there is only whitespace
     keys = "<Esc>",
-  })
+  }
 end
 
 M.blankline = function()
@@ -32,7 +32,7 @@ M.blankline = function()
   if not present then
     return
   end
-  blankline.setup({
+  blankline.setup {
     indentLine_enabled = 1,
     char = "▏",
     filetype_exclude = {
@@ -50,7 +50,7 @@ M.blankline = function()
     show_trailing_blankline_indent = true,
     show_first_indent_level = true,
     char_highlight_list = { "LineNr" },
-  })
+  }
 end
 
 M.colorizer = function(ft)
@@ -90,7 +90,7 @@ M.signature = function()
   if not present then
     return
   end
-  lsp_signature.setup({
+  lsp_signature.setup {
     bind = true,
     doc_lines = 0,
     floating_window = true,
@@ -106,7 +106,7 @@ M.signature = function()
     },
     zindex = 200, -- by default it will be on top of all floating windows, set to 50 send it to bottom
     padding = "", -- character to pad on left and right of signature can be ' ', or '|'  etc
-  })
+  }
 end
 
 M.gitsigns = function()
