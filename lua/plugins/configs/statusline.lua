@@ -4,7 +4,6 @@ if not present then
   return
 end
 
-local colors = require("colors").get()
 local lsp = require "feline.providers.lsp"
 local lsp_severity = vim.diagnostic.severity
 
@@ -58,18 +57,8 @@ local components = {
 
 local main_icon = {
   provider = separator_style.main_icon,
-
-  hl = {
-    fg = colors.statusline_bg,
-    bg = colors.nord_blue,
-  },
-
   right_sep = {
     str = separator_style.right,
-    hl = {
-      fg = colors.nord_blue,
-      bg = colors.lightbg,
-    },
   },
 }
 
@@ -84,14 +73,8 @@ local file_name = {
     end
     return " " .. icon .. " " .. filename .. " "
   end,
-  hl = {
-    fg = colors.white,
-    bg = colors.lightbg,
-  },
-
   right_sep = {
     str = separator_style.right,
-    hl = { fg = colors.lightbg, bg = colors.lightbg2 },
   },
 }
 
@@ -100,55 +83,30 @@ local dir_name = {
     local dir_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":t")
     return "  " .. dir_name .. " "
   end,
-
-  hl = {
-    fg = colors.grey_fg2,
-    bg = colors.lightbg2,
-  },
   right_sep = {
     str = separator_style.right,
-    hi = {
-      fg = colors.lightbg2,
-      bg = colors.statusline_bg,
-    },
   },
 }
 
 local diff = {
   add = {
     provider = "git_diff_added",
-    hl = {
-      fg = colors.grey_fg2,
-      bg = colors.statusline_bg,
-    },
     icon = " ",
   },
 
   change = {
     provider = "git_diff_changed",
-    hl = {
-      fg = colors.grey_fg2,
-      bg = colors.statusline_bg,
-    },
     icon = "  ",
   },
 
   remove = {
     provider = "git_diff_removed",
-    hl = {
-      fg = colors.grey_fg2,
-      bg = colors.statusline_bg,
-    },
     icon = "  ",
   },
 }
 
 local git_branch = {
   provider = "git_branch",
-  hl = {
-    fg = colors.grey_fg2,
-    bg = colors.statusline_bg,
-  },
   icon = "  ",
 }
 
@@ -158,8 +116,6 @@ local diagnostic = {
     enabled = function()
       return lsp.diagnostics_exist(lsp_severity.ERROR)
     end,
-
-    hl = { fg = colors.red },
     icon = "  ",
   },
 
@@ -168,7 +124,6 @@ local diagnostic = {
     enabled = function()
       return lsp.diagnostics_exist(lsp_severity.WARN)
     end,
-    hl = { fg = colors.yellow },
     icon = "  ",
   },
 
@@ -177,7 +132,6 @@ local diagnostic = {
     enabled = function()
       return lsp.diagnostics_exist(lsp_severity.HINT)
     end,
-    hl = { fg = colors.grey_fg2 },
     icon = "  ",
   },
 
@@ -186,7 +140,6 @@ local diagnostic = {
     enabled = function()
       return lsp.diagnostics_exist(lsp_severity.INFO)
     end,
-    hl = { fg = colors.green },
     icon = "  ",
   },
 }
@@ -199,17 +152,8 @@ local lsp_progress = {
       local msg = Lsp.message or ""
       local percentage = Lsp.percentage or 0
       local title = Lsp.title or ""
-      local spinners = {
-        "",
-        "",
-        "",
-      }
-
-      local success_icon = {
-        "",
-        "",
-        "",
-      }
+      local spinners = { "", "", "", }
+      local success_icon = { "", "", "", }
 
       local ms = vim.loop.hrtime() / 1000000
       local frame = math.floor(ms / 120) % #spinners
@@ -217,13 +161,10 @@ local lsp_progress = {
       if percentage >= 70 then
         return string.format(" %%<%s %s %s (%s%%%%) ", success_icon[frame + 1], title, msg, percentage)
       end
-
       return string.format(" %%<%s %s %s (%s%%%%) ", spinners[frame + 1], title, msg, percentage)
     end
-
     return ""
   end,
-  hl = { fg = colors.green },
 }
 
 local lsp_icon = {
@@ -234,97 +175,58 @@ local lsp_icon = {
       return ""
     end
   end,
-  hl = { fg = colors.grey_fg2, bg = colors.statusline_bg },
 }
-
-local mode_colors = {
-  ["n"] = { "NORMAL", colors.red },
-  ["no"] = { "N-PENDING", colors.red },
-  ["i"] = { "INSERT", colors.dark_purple },
-  ["ic"] = { "INSERT", colors.dark_purple },
-  ["t"] = { "TERMINAL", colors.green },
-  ["v"] = { "VISUAL", colors.cyan },
-  ["V"] = { "V-LINE", colors.cyan },
-  [""] = { "V-BLOCK", colors.cyan },
-  ["R"] = { "REPLACE", colors.orange },
-  ["Rv"] = { "V-REPLACE", colors.orange },
-  ["s"] = { "SELECT", colors.nord_blue },
-  ["S"] = { "S-LINE", colors.nord_blue },
-  [""] = { "S-BLOCK", colors.nord_blue },
-  ["c"] = { "COMMAND", colors.pink },
-  ["cv"] = { "COMMAND", colors.pink },
-  ["ce"] = { "COMMAND", colors.pink },
-  ["r"] = { "PROMPT", colors.teal },
-  ["rm"] = { "MORE", colors.teal },
-  ["r?"] = { "CONFIRM", colors.teal },
-  ["!"] = { "SHELL", colors.green },
-}
-
-local chad_mode_hl = function()
-  return {
-    fg = mode_colors[vim.fn.mode()][2],
-    bg = colors.one_bg,
-  }
-end
 
 local empty_space = {
   provider = " " .. separator_style.left,
-  hl = {
-    fg = colors.one_bg2,
-    bg = colors.statusline_bg,
-  },
 }
 
 -- this matches the vi mode color
 local empty_spaceColored = {
   provider = separator_style.left,
-  hl = function()
-    return {
-      fg = mode_colors[vim.fn.mode()][2],
-      bg = colors.one_bg2,
-    }
-  end,
 }
 
 local mode_icon = {
   provider = separator_style.vi_mode_icon,
-  hl = function()
-    return {
-      fg = colors.statusline_bg,
-      bg = mode_colors[vim.fn.mode()][2],
-    }
-  end,
 }
 
 local empty_space2 = {
   provider = function()
-    return " " .. mode_colors[vim.fn.mode()][1] .. " "
+    local modes = {
+      ["n"] = "NORMAL",
+      ["no"] = "N-PENDING",
+      ["i"] = "INSERT",
+      ["ic"] = "INSERT",
+      ["t"] = "TERMINAL",
+      ["v"] = "VISUAL",
+      ["V"] = "V-LINE",
+      [""] = "V-BLOCK",
+      ["R"] = "REPLACE",
+      ["Rv"] = "V-REPLACE",
+      ["s"] = "SELECT",
+      ["S"] = "S-LINE",
+      ["c"] = "COMMAND",
+      ["cv"] = "COMMAND",
+      ["ce"] = "COMMAND",
+      ["r"] = "PROMPT",
+      ["rm"] = "MORE",
+      ["r?"] = "CONFIRM",
+      ["!"] = "SHELL",
+    }
+    return " " .. modes[vim.fn.mode()] .. " "
   end,
-  hl = chad_mode_hl,
 }
 
 local separator_right = {
   provider = separator_style.left,
-  hl = {
-    fg = colors.grey,
-    bg = colors.one_bg,
-  },
 }
 
 local separator_right2 = {
   provider = separator_style.left,
-  hl = {
-    fg = colors.green,
-    bg = colors.grey,
-  },
 }
 
 local position_icon = {
   provider = separator_style.position_icon,
-  hl = {
-    fg = colors.black,
-    bg = colors.green,
-  },
 }
 
 local current_line = {
@@ -340,11 +242,6 @@ local current_line = {
     local result, _ = math.modf((current_line / total_line) * 100)
     return " " .. result .. "%% "
   end,
-
-  hl = {
-    fg = colors.green,
-    bg = colors.one_bg,
-  },
 }
 
 local function add_table(a, b)
@@ -396,9 +293,6 @@ components.active[2] = middle
 components.active[3] = right
 
 feline.setup {
-  theme = {
-    bg = colors.statusline_bg,
-    fg = colors.fg,
-  },
+  -- TODO: theme =
   components = components,
 }

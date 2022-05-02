@@ -27,9 +27,6 @@ local plugins = {
 
   ["kyazdani42/nvim-web-devicons"] = {
     --TODO: after = "nvim-base16.lua",
-    config = function()
-      require "plugins.configs.icons"
-    end,
   },
 
   ["feline-nvim/feline.nvim"] = {

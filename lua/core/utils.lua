@@ -54,16 +54,25 @@ M.fg_bg = function(group, fgcol, bgcol)
   cmd("hi " .. group .. " guifg=" .. fgcol .. " guibg=" .. bgcol)
 end
 
-M.load_ifExists = function(module)
-  if #module ~= 0 then
-    if type(module) == "string" then
-      require(module)
-
-      -- file[1] = module & file[2] = function
-    elseif type(module) == "table" then
-      require(module[1])[module[2]]()
+function M.autocmd(group, cmds)
+  cmd("augroup " .. group)
+  if type(cmds) == "string" then
+    cmds = { cmds, clear = false }
+  end
+  for _, _cmd in ipairs(cmds) do
+    if type(_cmd) == "string" then -- if cmds contains single entry like { cmd, clear = true }
+      cmd(string.format("%s %s", cmds["clear"] and "autocmd!" or "autocmd", _cmd))
+    else
+      --[[ if cmds contains multiple enteries like:
+       {
+         { cmd1, clear = <bool>},
+         {cmd2, clear = <bool>}
+       }
+      --]]
+      cmd(string.format("%s %s", _cmd["clear"] and "autocmd!" or "autocmd", _cmd[1]))
     end
   end
+  cmd("augroup END")
 end
 
 return M

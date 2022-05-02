@@ -102,10 +102,6 @@ user_cmd("PackerStatus", packer_cmd "status", {})
 user_cmd("PackerSync", packer_cmd "sync", {})
 user_cmd("PackerUpdate", packer_cmd "update", {})
 
--- add NvChadUpdate command and mapping
-cmd "silent! command! NvChadUpdate lua require('nvchad').update_nvchad()"
-map("n", "<leader>uu", "<cmd> :NvChadUpdate <CR>")
-
 local M = {}
 
 -- below are all plugin related mappings
