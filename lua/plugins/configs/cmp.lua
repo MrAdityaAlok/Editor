@@ -86,7 +86,7 @@ cmp.setup {
 
 cmp.setup.filetype({ "gitcommit", "gitrebase" }, {
   sources = cmp.config.sources({
-    { name = 'cmp_git' },
+    { name = 'git' },
   }, {
     { name = 'buffer' },
   })

@@ -12,10 +12,30 @@ map("v", "p", "p:let @+=@0<CR>")
 -- empty mode is same as using <cmd> :map
 -- also don't use g[j|k] when in operator pending mode, so it doesn't alter d, y or c behaviour
 
-map({ "n", "x", "o" }, "j", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true })
-map({ "n", "x", "o" }, "k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
-map("", "<Down>", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true })
-map("", "<Up>", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
+map(
+  { "n", "x", "o" },
+  "j",
+  'v:count || mode(1)[0:1] == "no" ? "j" : "gj"',
+  { expr = true }
+)
+map(
+  { "n", "x", "o" },
+  "k",
+  'v:count || mode(1)[0:1] == "no" ? "k" : "gk"',
+  { expr = true }
+)
+map(
+  "",
+  "<Down>",
+  'v:count || mode(1)[0:1] == "no" ? "j" : "gj"',
+  { expr = true }
+)
+map(
+  "",
+  "<Up>",
+  'v:count || mode(1)[0:1] == "no" ? "k" : "gk"',
+  { expr = true }
+)
 
 -- use ESC to turn off search highlighting
 map("n", "<Esc>", "<cmd> :noh <CR>")
@@ -96,8 +116,16 @@ M.bufferline = function()
 end
 
 M.comment = function()
-  map("n", "<leader>/", "<cmd> :lua require('Comment.api').toggle_current_linewise()<CR>")
-  map("v", "<leader>/", "<esc><cmd> :lua require('Comment.api').toggle_linewise_op(vim.fn.visualmode())<CR>")
+  map(
+    "n",
+    "<leader>/",
+    "<cmd> :lua require('Comment.api').toggle_current_linewise()<CR>"
+  )
+  map(
+    "v",
+    "<leader>/",
+    "<esc><cmd> :lua require('Comment.api').toggle_linewise_op(vim.fn.visualmode())<CR>"
+  )
 end
 
 M.lspconfig = function()
@@ -122,15 +150,15 @@ M.lspconfig = function()
     vim.lsp.buf.signature_help()
   end)
 
-  map("n", "<space>D", function()
+  map("n", "<leader>D", function()
     vim.lsp.buf.type_definition()
   end)
 
-  map("n", "<space>ra", function()
+  map("n", "<leader>ra", function()
     vim.lsp.buf.rename()
   end)
 
-  map("n", "<space>ca", function()
+  map("n", "<leader>ca", function()
     vim.lsp.buf.code_action()
   end)
 
@@ -138,7 +166,7 @@ M.lspconfig = function()
     vim.lsp.buf.references()
   end)
 
-  map("n", "<space>f", function()
+  map("n", "<leader>f", function()
     vim.diagnostic.open_float()
   end)
 
@@ -150,23 +178,23 @@ M.lspconfig = function()
     vim.diagnostic.goto_next()
   end)
 
-  map("n", "<space>q", function()
+  map("n", "<leader>q", function()
     vim.diagnostic.setloclist()
   end)
 
-  map("n", "<space>fm", function()
+  map("n", "<leader>fm", function()
     vim.lsp.buf.formatting()
   end)
 
-  map("n", "<space>wa", function()
+  map("n", "<leader>wa", function()
     vim.lsp.buf.add_workspace_folder()
   end)
 
-  map("n", "<space>wr", function()
+  map("n", "<leader>wr", function()
     vim.lsp.buf.remove_workspace_folder()
   end)
 
-  map("n", "<space>wl", function()
+  map("n", "<leader>wl", function()
     print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
   end)
 end
@@ -179,7 +207,11 @@ end
 M.telescope = function()
   map("n", "<leader>fb", "<cmd> :Telescope buffers <CR>")
   map("n", "<leader>ff", "<cmd> :Telescope find_files <CR>")
-  map("n", "<leader>fa", "<cmd> :Telescope find_files follow=true no_ignore=true hidden=true <CR>")
+  map(
+    "n",
+    "<leader>fa",
+    "<cmd> :Telescope find_files follow=true no_ignore=true hidden=true <CR>"
+  )
   map("n", "<leader>cm", "<cmd> :Telescope git_commits <CR>")
   map("n", "<leader>gt", "<cmd> :Telescope git_status <CR>")
   map("n", "<leader>fh", "<cmd> :Telescope help_tags <CR>")
