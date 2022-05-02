@@ -5,6 +5,12 @@ local g = vim.g
 g.did_load_filetypes = 0
 g.do_filetype_lua = 1
 
+local found, _ = pcall(require, "custom.configs.filetype")
+if not found then
+  vim.notify("Warning: failed to load custom.configs.filetype", vim.log.levels.WARN)
+end
+
+
 opt.confirm = true
 opt.laststatus = 3 -- global statusline
 opt.title = true
@@ -53,34 +59,31 @@ g.mapleader = " "
 -- disable some builtin vim plugins
 
 local default_plugins = {
-   "2html_plugin",
-   "getscript",
-   "getscriptPlugin",
-   "gzip",
-   "logipat",
-   "netrw",
-   "netrwPlugin",
-   "netrwSettings",
-   "netrwFileHandlers",
-   "matchit",
-   "tar",
-   "tarPlugin",
-   "rrhelper",
-   "spellfile_plugin",
-   "vimball",
-   "vimballPlugin",
-   "zip",
-   "zipPlugin",
+  "2html_plugin",
+  "getscript",
+  "getscriptPlugin",
+  "gzip",
+  "logipat",
+  "netrw",
+  "netrwPlugin",
+  "netrwSettings",
+  "netrwFileHandlers",
+  "matchit",
+  "tar",
+  "tarPlugin",
+  "rrhelper",
+  "spellfile_plugin",
+  "vimball",
+  "vimballPlugin",
+  "zip",
+  "zipPlugin",
 }
 
 for _, plugin in pairs(default_plugins) do
-   g["loaded_" .. plugin] = 1
+  g["loaded_" .. plugin] = 1
 end
 
 vim.schedule(function()
-   vim.opt.shadafile = vim.fn.expand "$HOME" .. "/.local/share/nvim/shada/main.shada"
-   vim.cmd [[ silent! rsh ]]
+  vim.opt.shadafile = vim.fn.stdpath("cache") .. "/nvim_shada"
+  vim.cmd [[ silent! rsh ]]
 end)
-
--- load user options if the file exists
-require("core.utils").load_config().options.user()
