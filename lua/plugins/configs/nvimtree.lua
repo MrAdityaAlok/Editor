@@ -18,30 +18,6 @@ g.nvim_tree_show_icons = {
   folder_arrows = 1,
 }
 
-g.nvim_tree_icons = {
-  default = "",
-  symlink = "",
-  git = {
-    deleted = "",
-    ignored = "◌",
-    renamed = "➜",
-    staged = "✓",
-    unmerged = "",
-    unstaged = "✗",
-    untracked = "★",
-  },
-  folder = {
-    default = "",
-    empty = "",
-    empty_open = "",
-    open = "",
-    symlink = "",
-    symlink_open = "",
-    arrow_open = "",
-    arrow_closed = "",
-  },
-}
-
 nvimtree.setup {
   filters = {
     dotfiles = false,
@@ -63,8 +39,8 @@ nvimtree.setup {
     hide_root_folder = true,
   },
   git = {
-    enable = false,
-    ignore = false,
+    enable = true,
+    ignore = true, -- Use shift+h to toggle hidden files where shift+i to toggle ignored files.
   },
   actions = {
     open_file = {
@@ -73,7 +49,7 @@ nvimtree.setup {
   },
   renderer = {
     indent_markers = {
-      enable = false,
+      enable = true,
     },
   },
 }

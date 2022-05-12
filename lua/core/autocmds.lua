@@ -1,30 +1,37 @@
-local autocmd = require("core.utils").autocmd
--- uncomment this if you want to open nvim with a dir
--- vim.cmd [[ autocmd BufEnter * if &buftype != "terminal" | lcd %:p:h | endif ]]
+local autocmd = vim.api.nvim_create_autocmd
+local augroup = function(name, _opts)
+  local opts = _opts or { clear = true }
+  vim.api.nvim_create_augroup(name, opts)
+end
 
--- Use relative & absolute line numbers in 'n' & 'i' modes respectively
--- vim.cmd[[ au InsertEnter * set norelativenumber ]]
--- vim.cmd[[ au InsertLeave * set relativenumber ]]
-
-autocmd("misc_aucmds", {
-  { -- Auto compile on changes to plugins/init.lua file.
-    "BufWritePost plugins/init.lua source <afile> | PackerCompile",
-    clear = true,
-  },
-  -- { "FileType smali set commentstring=#\\ %s", clear = true },
-  {
-    -- Open a file from its last left off position
-    [[ BufReadPost * if expand('%:p') !~# '\m/\.git/' && line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif ]],
-  },
-  { "CursorHold * lua vim.diagnostic.open_float()", clear = true },
-  {
-    "BufNewFile,BufRead /dev/shm/gopass.* setlocal noswapfile nobackup noundofile",
-    clear = true,
-  },
+autocmd("BufWritePost", {
+  pattern = "plugins/init.lua",
+  command = "source <afile> | PackerCompile",
+  desc = "Auto compile on changes to plugins/init.lua file.",
 })
 
--- When cursorline is set, highlight only line number
-autocmd("CLClear", "ColorScheme * hi clear CursorLine")
+autocmd("CursorHold", {
+  callback = function()
+    vim.diagnostic.open_float()
+  end,
+})
 
--- File extension specific tabbing
--- vim.cmd [[ autocmd Filetype python setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4 ]]
+-- autocmd({ "BufNewFile", "BufRead" }, {
+--   pattern = "/dev/shm/gopass.*",
+--   command = "setlocal noswapfile nobackup noundofile",
+-- })
+--
+
+autocmd("BufWritePre", {
+  callback = function(info)
+    local bufnr = info.buf or vim.api.nvim_get_current_buf()
+    vim.lsp.buf.format(
+      {
+        bufnr = bufnr,
+        name = "null-ls", -- Only format using null_ls.
+      },
+      10000 -- Black takes too long to format.
+    )
+  end,
+  group = augroup("LspFormatting", { clear = true }),
+})

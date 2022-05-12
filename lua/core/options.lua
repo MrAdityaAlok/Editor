@@ -1,18 +1,7 @@
 local opt = vim.opt
-local g = vim.g
-
--- use filetype.lua instead of filetype.vim
-g.did_load_filetypes = 0
-g.do_filetype_lua = 1
-
-local found, _ = pcall(require, "custom.configs.filetype")
-if not found then
-  vim.notify("Warning: failed to load custom.configs.filetype", vim.log.levels.WARN)
-end
 
 opt.confirm = true
 opt.laststatus = 3 -- global statusline
-opt.title = true
 opt.clipboard = "unnamedplus"
 opt.cmdheight = 1
 opt.cul = true -- cursor line
@@ -33,7 +22,6 @@ opt.mouse = "a"
 -- Numbers
 opt.number = true
 opt.numberwidth = 2
-opt.relativenumber = false
 opt.ruler = false
 
 -- disable nvim intro
@@ -42,18 +30,17 @@ opt.shortmess:append "sI"
 opt.signcolumn = "yes"
 opt.splitbelow = true
 opt.splitright = true
-opt.tabstop = 8
+opt.tabstop = 2
+opt.softtabstop = 0
 opt.termguicolors = true
-opt.timeoutlen = 400
 opt.undofile = true
-
--- interval for writing swap file to disk, also used by gitsigns
-opt.updatetime = 250
-
+-- Let it be higher since using fix updatetime plugin.
+opt.updatetime = 500
 -- go to previous/next line with h,l,left arrow and right arrow
 -- when cursor reaches end/beginning of line
 opt.whichwrap:append "<>[]hl"
-g.mapleader = " "
+
+opt.lazyredraw = true
 
 -- disable some builtin vim plugins
 
@@ -78,8 +65,8 @@ local default_plugins = {
   "zipPlugin",
 }
 
-for _, plugin in pairs(default_plugins) do
-  g["loaded_" .. plugin] = 1
+for i = 1, 18 do -- XXX: Hard coded. Update if number changes.
+  vim.g["loaded_" .. default_plugins[i]] = 1
 end
 
 vim.schedule(function()

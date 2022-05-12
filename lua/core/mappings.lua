@@ -1,20 +1,32 @@
-local utils = require "core.utils"
-
-local map = utils.map
-local cmd = vim.cmd
+local map = __my_utils.map
 local user_cmd = vim.api.nvim_create_user_command
 
--- Don't copy the replaced text after pasting in visual mode
-map("v", "p", "p:let @+=@0<CR>")
+-- https://vim.fandom.com/wiki/Replace_a_word_with_yanked_text#Alternative_mapping_for_paste
+map("v", "p", 'p:let @+=@0<CR>:let @"=@0<CR>', { silent = true })
 
 -- Allow moving the cursor through wrapped lines with j, k, <Up> and <Down>
 -- http<cmd> ://www.reddit.com/r/vim/comments/2k4cbr/problem_with_gj_and_gk/
 -- empty mode is same as using <cmd> :map
 -- also don't use g[j|k] when in operator pending mode, so it doesn't alter d, y or c behaviour
 
-map({ "n", "x", "o" }, "j", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true })
-map({ "n", "x", "o" }, "k", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
-map("", "<Down>", 'v:count || mode(1)[0:1] == "no" ? "j" : "gj"', { expr = true })
+map(
+  { "n", "x", "o" },
+  "j",
+  'v:count || mode(1)[0:1] == "no" ? "j" : "gj"',
+  { expr = true }
+)
+map(
+  { "n", "x", "o" },
+  "k",
+  'v:count || mode(1)[0:1] == "no" ? "k" : "gk"',
+  { expr = true }
+)
+map(
+  "",
+  "<Down>",
+  'v:count || mode(1)[0:1] == "no" ? "j" : "gj"',
+  { expr = true }
+)
 map("", "<Up>", 'v:count || mode(1)[0:1] == "no" ? "k" : "gk"', { expr = true })
 
 -- use ESC to turn off search highlighting
@@ -33,10 +45,6 @@ map("n", "<C-h>", "<C-w>h")
 map("n", "<C-l>", "<C-w>l")
 map("n", "<C-k>", "<C-w>k")
 map("n", "<C-j>", "<C-w>j")
-
-map("n", "<leader>x", function()
-  require("core.utils").close_buffer()
-end)
 
 map("n", "<C-c>", "<cmd> :%y+ <CR>") -- copy whole file content
 map("n", "<S-t>", "<cmd> :enew <CR>") -- new buffer
@@ -92,8 +100,16 @@ M.bufferline = function()
 end
 
 M.comment = function()
-  map("n", "<leader>/", "<cmd> :lua require('Comment.api').toggle_current_linewise()<CR>")
-  map("v", "<leader>/", "<esc><cmd> :lua require('Comment.api').toggle_linewise_op(vim.fn.visualmode())<CR>")
+  map(
+    "n",
+    "<leader>/",
+    "<cmd> :lua require('Comment.api').toggle_current_linewise()<CR>"
+  )
+  map(
+    "v",
+    "<leader>/",
+    "<esc><cmd> :lua require('Comment.api').toggle_linewise_op(vim.fn.visualmode())<CR>"
+  )
 end
 
 M.lspconfig = function()
@@ -134,10 +150,6 @@ M.lspconfig = function()
     vim.lsp.buf.references()
   end)
 
-  map("n", "<leader>f", function()
-    vim.diagnostic.open_float()
-  end)
-
   map("n", "[d", function()
     vim.diagnostic.goto_prev()
   end)
@@ -175,13 +187,18 @@ end
 M.telescope = function()
   map("n", "<leader>fb", "<cmd> :Telescope buffers <CR>")
   map("n", "<leader>ff", "<cmd> :Telescope find_files <CR>")
-  map("n", "<leader>fa", "<cmd> :Telescope find_files follow=true no_ignore=true hidden=true <CR>")
+  map(
+    "n",
+    "<leader>fa",
+    "<cmd> :Telescope find_files follow=true no_ignore=true hidden=true <CR>"
+  )
   map("n", "<leader>cm", "<cmd> :Telescope git_commits <CR>")
   map("n", "<leader>gt", "<cmd> :Telescope git_status <CR>")
   map("n", "<leader>fh", "<cmd> :Telescope help_tags <CR>")
   map("n", "<leader>fw", "<cmd> :Telescope live_grep <CR>")
   map("n", "<leader>fo", "<cmd> :Telescope oldfiles <CR>")
   map("n", "<leader>th", "<cmd> :Telescope themes <CR>")
+  map("n", "<leader>tk", "<cmd> :Telescope keymaps <CR>")
 
   -- pick a hidden term
   map("n", "<leader>W", "<cmd> :Telescope terms <CR>")

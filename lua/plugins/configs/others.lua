@@ -53,12 +53,12 @@ M.blankline = function()
   }
 end
 
-M.colorizer = function(ft)
+M.colorizer = function()
   local present, colorizer = pcall(require, "colorizer")
   if not present then
     return
   end
-  colorizer.setup(ft, {
+  colorizer.setup({ "*" }, { -- Specify here to highlight all, but packer will load for few files only.
     RGB = true, -- #RGB hex codes
     RRGGBB = true, -- #RRGGBB hex codes
     names = false, -- "Name" codes like Blue
@@ -70,7 +70,7 @@ M.colorizer = function(ft)
     -- Available modes: foreground, background
     mode = "background", -- Set the display mode.
   })
-  vim.cmd "ColorizerReloadAllBuffers"
+  --  vim.cmd "ColorizerReloadAllBuffers"
 end
 
 M.luasnip = function()

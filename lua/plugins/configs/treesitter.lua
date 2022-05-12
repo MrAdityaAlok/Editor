@@ -23,13 +23,11 @@ treesitter.setup {
     "regex",
     "rust",
     "toml",
-    "typescript",
     "yaml",
     "ruby",
     "haskell",
     "cmake",
     "make",
-    "ninja",
   },
   highlight = {
     enable = true,

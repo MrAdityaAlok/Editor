@@ -3,7 +3,7 @@ null_ls.setup {
   -- update_in_insert = true,
   diagnostics_format = "[#{c}] #{m} (#{s})",
   sources = {
-    -- null_ls.builtins.formatting.clang_format, available by clangd
+    null_ls.builtins.formatting.clang_format,
     null_ls.builtins.formatting.rustfmt,
     null_ls.builtins.formatting.trim_whitespace,
     null_ls.builtins.formatting.prettierd,
@@ -16,6 +16,15 @@ null_ls.setup {
         "--line-length=79",
         "--experimental-string-processing",
         "-",
+      },
+    },
+    null_ls.builtins.formatting.stylua.with {
+      extra_args = {
+        "--column-width=80",
+        "--indent-type=Spaces",
+        "--indent-width=2",
+        "--quote-style=AutoPreferDouble",
+        "--call-parentheses=None",
       },
     },
     null_ls.builtins.formatting.isort,
