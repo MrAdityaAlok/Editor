@@ -1,10 +1,13 @@
-local present, cmp = pcall(require, "cmp")
+local cmp = require "cmp"
 
-if not present then
-  return
-end
-
-vim.opt.completeopt = "menuone,noselect"
+local default_sources = {
+  { name = "nvim_lsp" },
+  { name = "nvim_lsp_signature_help" },
+  { name = "luasnip_choice" },
+  { name = "luasnip" },
+  { name = "path" },
+  { name = "buffer" },
+}
 
 cmp.setup {
   view = {
@@ -17,27 +20,6 @@ cmp.setup {
   snippet = {
     expand = function(args)
       require("luasnip").lsp_expand(args.body)
-    end,
-  },
-  formatting = {
-    format = function(entry, vim_item)
-      local icons = require "custom.configs.lspkind_icons"
-      vim_item.kind = string.format(
-        "%s %s",
-        icons[vim_item.kind],
-        vim_item.kind
-      )
-      -- set a name for each source
-      vim_item.menu = ({
-        nvim_lsp = "[LSP]",
-        nvim_lua = "[Lua]",
-        luasnip = "[LuaSnip]",
-        cmp_git = "[GIT]",
-        path = "[Path]",
-        buffer = "[BUF]",
-      })[entry.source.name]
-
-      return vim_item
     end,
   },
   mapping = cmp.mapping.preset.insert {
@@ -55,58 +37,60 @@ cmp.setup {
     ["<Tab>"] = cmp.mapping(function(fallback)
       if cmp.visible() then
         cmp.select_next_item()
-      elseif require("luasnip").expand_or_jumpable() then
-        vim.fn.feedkeys(
-          vim.api.nvim_replace_termcodes(
-            "<Plug>luasnip-expand-or-jump",
-            true,
-            true,
-            true
-          ),
-          ""
-        )
-      else
-        fallback()
-      end
-    end, { "i", "s" }),
-    ["<S-Tab>"] = cmp.mapping(function(fallback)
-      if cmp.visible() then
-        cmp.select_prev_item()
-      elseif require("luasnip").jumpable(-1) then
-        vim.fn.feedkeys(
-          vim.api.nvim_replace_termcodes(
-            "<Plug>luasnip-jump-prev",
-            true,
-            true,
-            true
-          ),
-          ""
-        )
+      elseif require("luasnip").expand_or_locally_jumpable() then
+        require("luasnip").expand_or_jump()
       else
         fallback()
       end
     end, { "i", "s" }),
   },
-  sources = {
-    { name = "nvim_lsp" },
-    { name = "luasnip" },
-    { name = "nvim_lua" },
-    { name = "path" },
-    { name = "buffer" },
+  formatting = {
+    format = function(entry, vim_item)
+      local icons = require "custom.configs.lspkind_icons"
+      vim_item.kind =
+        string.format("%s %s", icons[vim_item.kind], vim_item.kind)
+      -- set a name for each source
+      vim_item.menu = ({
+        nvim_lsp = "[LSP]",
+        nvim_lua = "[Lua]",
+        luasnip = "[LuaSnip]",
+        luasnip_choice = "[LuaSnip(choice)]",
+        git = "[GIT]",
+        path = "[Path]",
+        buffer = "[BUF]",
+        fish = "[Fish]",
+        nvim_lsp_signature_help = "[Signature]",
+        nvim_lsp_document_symbol = "[DocSymbol]",
+      })[entry.source.name]
+
+      return vim_item
+    end,
   },
+  sources = default_sources,
 }
 
 cmp.setup.filetype({ "gitcommit", "gitrebase" }, {
+  sources = cmp.config.sources { { name = "git" }, { name = "buffer" } },
+})
+
+cmp.setup.filetype("fish", {
   sources = cmp.config.sources({
-    { name = "git" },
-  }, {
-    { name = "buffer" },
-  }),
+    { name = "fish" },
+    { name = "luasnip" },
+  }, { { name = "buffer" } }),
+})
+
+cmp.setup.filetype("lua", {
+  sources = cmp.config.sources {
+    { name = "nvim_lua" },
+    unpack(default_sources),
+  },
 })
 
 cmp.setup.cmdline("/", {
   mapping = cmp.mapping.preset.cmdline(),
-  sources = {
+  sources = cmp.config.sources {
     { name = "buffer" },
+    { name = "nvim_lsp_document_symbol" },
   },
 })

@@ -1,4 +1,16 @@
 return {
+  gopls = {},
+  bashls = {},
+  clangd = {},
+  pyright = {},
+  jsonls = {
+    -- settings = {
+    --   json = {
+    --     schemas = require("schemastore").json.schemas(),
+    --     validate = { enable = true },
+    --   },
+    -- },
+  },
   sumneko_lua = function()
     local runtime_path = vim.split(package.path, ";")
     table.insert(runtime_path, "lua/?.lua")
@@ -14,7 +26,7 @@ return {
             globals = { "vim", "__my_utils" },
           },
           workspace = {
-            library = vim.api.nvim_get_runtime_file("", true),
+            -- library = vim.api.nvim_get_runtime_file("", true),
           },
           telemetry = {
             enable = false,
@@ -23,4 +35,13 @@ return {
       },
     }
   end,
+  -- perlpls = {
+  --   settings = {
+  --     perl = {
+  --       perlcritic = {
+  --         enabled = true,
+  --       },
+  --     },
+  --   },
+  -- },
 }

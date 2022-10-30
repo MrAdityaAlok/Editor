@@ -1,5 +1,4 @@
 local present, packer = pcall(require, "plugins.packerInit")
-
 if not present then
   return false
 end
@@ -7,58 +6,75 @@ end
 local plugins = {
   { "lewis6991/impatient.nvim" },
   { "nvim-lua/plenary.nvim" },
-
   {
-    "folke/tokyonight.nvim",
-    setup = function()
-      local g = vim.g
-      g.tokyonight_style = "night"
-      g.tokyonight_italic_functions = true
-      g.tokyonight_transparent = true
-      g.tokyonight_hide_inactive_statusline = true
-      -- g.tokyonight_sidebars = { "NvimTree", "packer" }
-      -- g.tokyonight_lualine_bold = true
-      -- g.tokyonight_dark_float = true
-      -- g.tokyonight_dark_sidebar = true
-      g.tokyonight_transparent_sidebar = true
-      g.tokyonight_colors = { bg_statusline = "#000000", bg_popup = "#000000" }
-    end,
+    "catppuccin/nvim",
+    as = "catppuccin",
+    run = ":CatppuccinCompile",
     config = function()
-      local cmd = vim.cmd
-      cmd "colorscheme tokyonight"
-      cmd "hi clear CursorLine"
+      require "custom.configs.theme"
     end,
   },
 
   { "wbthomason/packer.nvim", event = "VimEnter" },
+  -- {
+  --   "j-hui/fidget.nvim",
+  --   config = function()
+  --     require("fidget").setup()
+  --   end,
+  -- },
 
-  {
-    "NvChad/nvterm",
-    config = function()
-      require "plugins.configs.nvterm"
-    end,
-  },
+  -- {
+  --   "folke/noice.nvim",
+  --   event = "VimEnter",
+  --   config = function()
+  --     require "plugins.configs.noice"
+  --   end,
+  --   requires = {
+  --     -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+  --     "MunifTanjim/nui.nvim",
+  --     "rcarriga/nvim-notify",
+  --   },
+  -- },
+  --
+  -- {
+  --   "NvChad/nvterm",
+  --   config = function()
+  --     require "plugins.configs.nvterm"
+  --   end,
+  -- },
 
-  { "kyazdani42/nvim-web-devicons", after = "tokyonight.nvim" },
+  { "kyazdani42/nvim-web-devicons", after = "catppuccin" },
 
   {
     "feline-nvim/feline.nvim",
-    after = "nvim-web-devicons",
+    after = "catppuccin",
     config = function()
-      require "plugins.configs.statusline"
+      local ctp_feline = require "catppuccin.groups.integrations.feline"
+
+      require("feline").setup {
+        components = ctp_feline.get(),
+      }
+
+      vim.api.nvim_create_autocmd("ColorScheme", {
+        pattern = "*",
+        callback = function()
+          package.loaded["feline"] = nil
+          package.loaded["catppuccin.groups.integrations.feline"] = nil
+          require("feline").setup {
+            components = require("catppuccin.groups.integrations.feline").get(),
+          }
+        end,
+      })
     end,
   },
 
-  {
-    "akinsho/bufferline.nvim",
-    after = "nvim-web-devicons",
-    setup = function()
-      require("core.mappings").bufferline()
-    end,
-    config = function()
-      require "plugins.configs.bufferline"
-    end,
-  },
+  -- {
+  --   "akinsho/bufferline.nvim",
+  --   after = "nvim-web-devicons",
+  --   config = function()
+  --     require "plugins.configs.bufferline"
+  --   end,
+  -- },
 
   {
     "lukas-reineke/indent-blankline.nvim",
@@ -68,20 +84,12 @@ local plugins = {
     end,
   },
 
-  {
-    "NvChad/nvim-colorizer.lua",
-    event = "BufRead",
-    ft = {
-      "css",
-      "javascript",
-      "vim",
-      "html",
-      "jproperties",
-      "properties",
-    },
-    config = require("plugins.configs.others").colorizer(),
-  },
-
+  -- {
+  --   "NvChad/nvim-colorizer.lua",
+  --   event = "BufRead",
+  --   config = require("plugins.configs.others").colorizer(),
+  -- },
+  --
   {
     "nvim-treesitter/nvim-treesitter",
     event = { "BufRead", "BufNewFile" },
@@ -95,6 +103,7 @@ local plugins = {
     after = "nvim-treesitter",
   },
   { "p00f/nvim-ts-rainbow", after = "nvim-ts-context-commentstring" },
+  { "nvim-treesitter/nvim-treesitter-context", after = "nvim-ts-rainbow" },
 
   -- git stuff
   {
@@ -109,16 +118,13 @@ local plugins = {
   },
 
   -- lsp stuff
-  {
-    "b0o/schemastore.nvim",
-    module = "lspconfig",
-    setup = function()
-      __my_utils.packer_lazy_load "schemastore.nvim"
-    end,
-  },
+  -- {
+  --   "b0o/schemastore.nvim",
+  --   opt = true,
+  -- },
   {
     "neovim/nvim-lspconfig",
-    module = "lspconfig",
+    -- module = "schemastore",
     opt = true,
     setup = function()
       __my_utils.packer_lazy_load "nvim-lspconfig"
@@ -150,9 +156,6 @@ local plugins = {
     "numToStr/Comment.nvim",
     module = "Comment",
     keys = { "gc", "gb" },
-    setup = function()
-      require("core.mappings").comment()
-    end,
     config = function()
       require("Comment").setup()
     end,
@@ -166,14 +169,14 @@ local plugins = {
     end,
   },
 
-  {
-    "max397574/better-escape.nvim",
-    event = "InsertCharPre",
-    config = function()
-      require("plugins.configs.others").better_escape()
-    end,
-  },
-
+  -- {
+  --   "max397574/better-escape.nvim",
+  --   event = "InsertCharPre",
+  --   config = function()
+  --     require("plugins.configs.others").better_escape()
+  --   end,
+  -- },
+  --
   -- load luasnips + cmp related in insert mode only
 
   {
@@ -204,13 +207,26 @@ local plugins = {
   { "hrsh7th/cmp-nvim-lsp", after = "cmp-nvim-lua" },
   { "hrsh7th/cmp-buffer", after = "cmp-nvim-lsp" },
   { "hrsh7th/cmp-path", after = "cmp-buffer" },
+  { "hrsh7th/cmp-nvim-lsp-document-symbol", after = "cmp-path" },
+  {
+    "hrsh7th/cmp-nvim-lsp-signature-help",
+    after = "cmp-nvim-lsp-document-symbol",
+  },
+  {
+    "doxnit/cmp-luasnip-choice",
+    after = "cmp-nvim-lsp-signature-help",
+    config = function()
+      require("cmp_luasnip_choice").setup()
+    end,
+  },
   {
     "petertriho/cmp-git",
-    after = "cmp-path",
+    ft = { "gitcommit", "gitrebase" },
     config = function()
       require("cmp_git").setup()
     end,
   },
+  { "mtoohey31/cmp-fish", ft = "fish" },
 
   -- misc plugins
   {
@@ -239,7 +255,7 @@ local plugins = {
     "folke/which-key.nvim",
     event = "BufEnter",
     config = function()
-      require "plugins.configs.which-key"
+      require "plugins.configs.whichkey"
     end,
   },
 
@@ -247,17 +263,37 @@ local plugins = {
   {
     "kyazdani42/nvim-tree.lua",
     cmd = { "NvimTreeToggle", "NvimTreeFocus" },
-    setup = function()
-      require("core.mappings").nvimtree()
-    end,
     config = function()
       require "plugins.configs.nvimtree"
     end,
   },
 
   -- Additional syntax highlightings
+  -- {"icedman/nvim-textmate", config= function()
+  --   require "plugins.configs.textmate"
+  -- end
+  -- },
   { "MrAdityaAlok/vim-smali", ft = "smali" },
-  { "tpope/vim-git", ft = { "gitcommit", "gitrebase" }, opt = true },
+  {
+    "nvim-neorg/neorg",
+    cmd = "Neorg",
+    run = ":Neorg sync-parsers",
+    ft = "norg",
+    after = "nvim-treesitter",
+    config = function()
+      require "plugins.configs.neorg"
+    end,
+    requires = "nvim-lua/plenary.nvim",
+  },
+  -- { "tpope/vim-git", ft = { "gitcommit", "gitrebase" } },
+  -- using packer.nvim
+  {
+    "nmac427/guess-indent.nvim",
+    event = "BufEnter",
+    config = function()
+      require("guess-indent").setup {}
+    end,
+  },
 
   -- Smooth scrolling
   {
@@ -272,11 +308,10 @@ local plugins = {
     end,
   },
 
+  -- { "stevearc/dressing.nvim", event = "BufEnter" },
+
   -- {"nvim-telescope/telescope.nvim",
   --   cmd = "Telescope",
-  --   setup = function()
-  --     require("core.mappings").telescope()
-  --   end,
   --   config = function()
   --     require "plugins.configs.telescope"
   --   end,

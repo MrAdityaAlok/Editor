@@ -1,30 +1,14 @@
 local M = {}
 
 M.autopairs = function()
-  local present1, autopairs = pcall(require, "nvim-autopairs")
-  local present2, cmp = pcall(require, "cmp")
-  if not present1 and present2 then
-    return
-  end
-  autopairs.setup {
-    fast_wrap = {},
-    disable_filetype = { "TelescopePrompt", "vim" },
-  }
+  local cmp = require "cmp"
+  local autopairs = require "nvim-autopairs"
+  autopairs.setup {}
+  --   fast_wrap = {},
+  --   disable_filetype = { "TelescopePrompt", "vim" },
+  -- }
   local cmp_autopairs = require "nvim-autopairs.completion.cmp"
   cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
-end
-
-M.better_escape = function()
-  local present, escape = pcall(require, "better_escape")
-  if not present then
-    return
-  end
-  escape.setup {
-    mapping = { "jk" }, -- a table with mappings to use
-    timeout = vim.o.timeoutlen,
-    clear_empty_lines = false, -- clear line after escaping if there is only whitespace
-    keys = "<Esc>",
-  }
 end
 
 M.blankline = function()
@@ -49,30 +33,20 @@ M.blankline = function()
     buftype_exclude = { "terminal" },
     show_trailing_blankline_indent = true,
     show_first_indent_level = true,
-    char_highlight_list = { "LineNr" },
+    char_highlight_list = { "Comment" },
   }
 end
 
-M.colorizer = function()
-  local present, colorizer = pcall(require, "colorizer")
-  if not present then
-    return
-  end
-  colorizer.setup({ "*" }, { -- Specify here to highlight all, but packer will load for few files only.
-    RGB = true, -- #RGB hex codes
-    RRGGBB = true, -- #RRGGBB hex codes
-    names = false, -- "Name" codes like Blue
-    RRGGBBAA = true, -- #RRGGBBAA hex codes
-    rgb_fn = true, -- CSS rgb() and rgba() functions
-    hsl_fn = true, -- CSS hsl() and hsla() functions
-    css = true, -- Enable all CSS features: rgb_fn, hsl_fn, names, RGB, RRGGBB
-    css_fn = true, -- Enable all CSS *functions*: rgb_fn, hsl_fn
-    -- Available modes: foreground, background
-    mode = "background", -- Set the display mode.
-  })
-  --  vim.cmd "ColorizerReloadAllBuffers"
-end
-
+-- M.colorizer = function()
+--   require("colorizer").setup {
+--     "css",
+--     "javascript",
+--     html = {
+--       mode = "foreground",
+--     },
+--   }
+-- end
+--
 M.luasnip = function()
   local present, luasnip = pcall(require, "luasnip")
   if not present then
@@ -110,19 +84,15 @@ M.signature = function()
 end
 
 M.gitsigns = function()
-  local present, gitsigns = pcall(require, "gitsigns")
-  if not present then
-    return
-  end
-  gitsigns.setup {
-    signs = { -- '│',▋
-      add = { text = "▋", numhl = "GitSignsAddNr" },
-      change = { text = "▋", numhl = "GitSignsChangeNr" },
-      delete = { text = "▋", numhl = "GitSignsDeleteNr" },
-      topdelete = { text = "▋", numhl = "GitSignsDeleteNr" },
-      changedelete = { text = "▋", numhl = "GitSignsChangeNr" },
-    },
-  }
+  local gitsigns = require "gitsigns"
+  gitsigns.setup {}
+  -- signs = { -- '│',▋
+  --   add = { text = "▋", numhl = "GitSignsAddNr" },
+  --   change = { text = "▋", numhl = "GitSignsChangeNr" },
+  --   delete = { text = "▋", numhl = "GitSignsDeleteNr" },
+  --   topdelete = { text = "▋", numhl = "GitSignsDeleteNr" },
+  --   changedelete = { text = "▋", numhl = "GitSignsChangeNr" },
+  -- },
 end
 
 return M

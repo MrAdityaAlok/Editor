@@ -6,28 +6,52 @@ end
 
 treesitter.setup {
   ensure_installed = {
-    "lua",
+    -- Nvim related:
     "vim",
-    "bash",
+    "lua",
+
+    -- Core languages:
     "c",
-    "comment",
     "cpp",
-    "css",
-    "go",
-    "html",
-    "java",
-    "javascript",
-    "jsonc",
-    "python",
-    "kotlin",
-    "regex",
     "rust",
+    "go",
+    "python",
+    "java",
+    "kotlin",
+    "haskell",
+    "ruby",
+
+    -- Web development languages (minimal):
+    "css",
+    "html",
+    "javascript",
+    "typescript",
+    --
+    "jsonc",
+
+    -- Scripting languages:
+    "bash",
+    "fish",
+    "perl",
+    "regex",
     "toml",
     "yaml",
-    "ruby",
-    "haskell",
+
+    -- Build systems:
     "cmake",
     "make",
+    "meson",
+    "ninja",
+
+    -- Miscelleneous:
+    "comment",
+    "diff",
+    "gitignore",
+    "gitattributes",
+
+    ---
+    "markdown",
+    "markdown_inline",
   },
   highlight = {
     enable = true,

@@ -13,28 +13,7 @@ local function on_attach(client, _)
       end,
     })
   end
-
-  require("core.mappings").lspconfig()
 end
-
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.textDocument.completion.completionItem = {
-  documentationFormat = { "markdown", "plaintext" },
-  snippetSupport = true,
-  preselectSupport = true,
-  insertReplaceSupport = true,
-  labelDetailsSupport = true,
-  deprecatedSupport = true,
-  commitCharactersSupport = true,
-  tagSupport = { valueSet = { 1 } },
-  resolveSupport = {
-    properties = {
-      "documentation",
-      "detail",
-      "additionalTextEdits",
-    },
-  },
-}
 
 local function lspSymbol(name, icon)
   local hl = "DiagnosticSign" .. name
@@ -47,11 +26,17 @@ lspSymbol("Hint", "")
 lspSymbol("Warn", "")
 
 vim.diagnostic.config {
-  virtual_text = {
-    prefix = "",
-    source = "always",
-    spacing = 4,
-  },
+  virtual_text = function()
+    if vim.api.nvim_get_mode()["mode"] == "i" then
+      return {
+        prefix = "",
+        source = "always",
+        spacing = 4,
+      }
+    else
+      return false
+    end
+  end,
   signs = true,
   underline = true,
   update_in_insert = true,
@@ -72,16 +57,15 @@ vim.diagnostic.config { float = { border = "rounded" } }
 -- setup lsp
 local lspconfig = require "lspconfig"
 
+local capabilities = require("cmp_nvim_lsp").default_capabilities()
+
 for server, config in pairs(require "custom.configs.lspconfig") do
   if type(config) == "function" then
     config = config()
   end
   config.on_attach = on_attach
-  config.capabilities = vim.tbl_deep_extend(
-    "keep",
-    config.capabilities or {},
-    capabilities
-  )
+  config.capabilities =
+    vim.tbl_deep_extend("keep", config.capabilities or {}, capabilities)
   config.handlers = vim.tbl_deep_extend("keep", config.handlers or {}, handlers)
   lspconfig[server].setup(config)
 end
